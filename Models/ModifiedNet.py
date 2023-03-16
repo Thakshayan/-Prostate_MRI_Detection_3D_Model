@@ -75,11 +75,11 @@ class MNet(nn.Module):
         
         out = self.conv_last(x)
         
-        return out.squeeze(1)
+        return out
     
 if __name__ == "__main__":
   
-  x = MNet()
+  x = MUNet()
   print(sum(p.numel() for p in x.parameters()))
   print(x(torch.randn(1,1,128,128,16)).shape)
 
