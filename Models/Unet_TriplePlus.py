@@ -63,7 +63,7 @@ def init_weights(net, init_type='normal'):
         net.apply(weights_init_orthogonal)
     else:
         raise NotImplementedError('initialization method [%s] is not implemented' % init_type)
-
+F
 def resnet_Add(x1,x2):
     res_add = x1 + x2 
     return res_add

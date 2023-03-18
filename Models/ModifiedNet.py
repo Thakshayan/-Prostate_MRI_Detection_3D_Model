@@ -79,7 +79,7 @@ class MNet(nn.Module):
     
 if __name__ == "__main__":
   
-  x = MUNet()
+  x = MNet()
   print(sum(p.numel() for p in x.parameters()))
   print(x(torch.randn(1,1,128,128,16)).shape)
 
