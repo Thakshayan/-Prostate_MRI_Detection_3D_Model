@@ -48,7 +48,7 @@ def create_same_slice_nifti(data, slice_size ,dir):
 
 
 
-def create_same_slice_pz(data, slice_size ,dir):
+def create_same_slice_zone(data, slice_size ,dir):
   paths = []
   total = len(data)
   count = 1
@@ -70,4 +70,4 @@ def create_same_slice_pz(data, slice_size ,dir):
     print(f"{count}/{total}")
     count += 1
 
-  save_to_json({"path": paths}, dir + 'config_pz.json')
+  save_to_json({"path": paths}, dir)
