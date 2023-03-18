@@ -56,6 +56,10 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
 
    
     start = time.time()
+    max_gpu_memory = 0
+    max_cpu_memory = 0
+    gpu_memory_start = torch.cuda.max_memory_allocated(device=device)
+    cpu_memory_start = psutil.Process().memory_info().rss
 
     for epoch in range(start_from -1 , max_epochs):
         print("-" * 10)
@@ -157,15 +161,22 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
 
             end = time.time()
             time_taken = end - start
-            cuda_memory = round(torch.cuda.memory_allocated(device=device) / (1024*1024) ,2 )
-            cpu_memory = round(psutil.Process().memory_info().rss / (1024*1024),2 )
-            print(time_taken)
-            print(cuda_memory)
-            print(cpu_memory)
+
+            # record memory usage after running code
+            gpu_memory_end = torch.cuda.max_memory_allocated(device=device)
+            cpu_memory_end = psutil.Process().memory_info().rss
+
+            # calculate memory usage
+            max_gpu_memory = max(max_gpu_memory, gpu_memory_end - gpu_memory_start)
+            max_cpu_memory = max(max_cpu_memory, cpu_memory_end - cpu_memory_start)
+            
+            print("Time Taken: ",time_taken)
+            print("Maximum GPU Memory taken for training: ",max_gpu_memory)
+            print("Maximum CPU Memory taken for training: ",max_gpu_memory)
             print(
                 f"train completed, best_metric: {best_metric:.4f} "
                 f"at epoch: {best_metric_epoch}")
-            update_history([start_from, max_epochs, best_metric, best_metric_epoch, time_taken, cuda_memory, cpu_memory],model_dir=model_dir)
+            update_history([start_from, max_epochs, best_metric, best_metric_epoch, time_taken, max_cpu_memory, max_gpu_memory],model_dir=model_dir)
 
 
   
