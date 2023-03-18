@@ -1,4 +1,4 @@
 /data
 /PROSTATEx_masks
 /packages
-/results
+*.pth
