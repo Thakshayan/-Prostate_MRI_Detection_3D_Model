@@ -417,7 +417,7 @@ class U_net_TriplePlus(nn.Module):
     def __init__(self,in_channel =4, out_channel=3):
         super(U_net_TriplePlus,self).__init__()
         #filters = [32,64,128,256,512]
-        filters = [16,32,64,128,256]
+        filters = [64,128,256,512]
 
         ## -------------Encoder--------------
         self.conv1 = MyResBlock(in_channel, filters[0])
@@ -429,44 +429,34 @@ class U_net_TriplePlus(nn.Module):
         self.conv3 = MyResBlock(filters[1], filters[2])
         self.maxpool3 = nn.MaxPool3d(kernel_size=2)
 
-        self.conv4 = MyResBlock(filters[2], filters[3])
-        self.maxpool4 = nn.MaxPool3d(kernel_size=2)
 
-        self.conv5 = MyResBlock(filters[3], filters[4])
+        self.conv4 = MyResBlock(filters[2], filters[3])
 
         ## -------------Decoder--------------
         self.CatChannels = filters[0]
-        self.CatBlocks = 5
+        self.CatBlocks = 4
         self.UpChannels = self.CatChannels * self.CatBlocks
 
 
-        self.de1_1 = Up_conv(filters[4],filters[0],2)
-        self.de1_2 = conv3d_FRN_TLU(filters[3],filters[0])
-        self.de1_3 = Max_conv(filters[2],filters[0],2)
-        self.de1_4 = Max_conv(filters[1],filters[0],4)
-        self.de1_5 = Max_conv(filters[0],filters[0],8)
-        self.de1_6 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
+        self.de1_1 = Up_conv(filters[3],filters[0],2)
+        self.de1_2 = conv3d_FRN_TLU(filters[2],filters[0])
+        self.de1_3 = Max_conv(filters[1],filters[0],2)
+        self.de1_4 = Max_conv(filters[0],filters[0],4)
+        self.de1_5 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
 
-        self.de2_1 = Up_conv(filters[4],filters[0],4)
+        self.de2_1 = Up_conv(filters[3],filters[0],4)
         self.de2_2 = Up_conv(self.UpChannels,filters[0],2)
-        self.de2_3 = conv3d_FRN_TLU(filters[2],filters[0])
-        self.de2_4 = Max_conv(filters[1],filters[0],2)
-        self.de2_5 = Max_conv(filters[0],filters[0],4)
-        self.de2_6 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
+        self.de2_3 = conv3d_FRN_TLU(filters[1],filters[0])
+        self.de2_4 = Max_conv(filters[0],filters[0],2)
+        self.de2_5 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
 
-        self.de3_1 = Up_conv(filters[4],filters[0],8)
+        self.de3_1 = Up_conv(filters[3],filters[0],8)
         self.de3_2 = Up_conv(self.UpChannels,filters[0],4)
         self.de3_3 = Up_conv(self.UpChannels,filters[0],2)
-        self.de3_4 = conv3d_FRN_TLU(filters[1],filters[0])
-        self.de3_5 = Max_conv(filters[0],filters[0],2)
-        self.de3_6 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
+        self.de3_4 = conv3d_FRN_TLU(filters[0],filters[0])
+        self.de3_5 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
 
-        self.de4_1 = Up_conv(filters[4],filters[0],16)
-        self.de4_2 = Up_conv(self.UpChannels,filters[0],8)
-        self.de4_3 = Up_conv(self.UpChannels,filters[0],4)
-        self.de4_4 = Up_conv(self.UpChannels,filters[0],2)
-        self.de4_5 = conv3d_FRN_TLU(filters[0],filters[0])
-        self.de4_6 = conv3d_FRN_TLU(self.UpChannels,self.UpChannels)
+
 
         self.out_conv = nn.Conv3d(self.UpChannels,out_channel,kernel_size=3,padding=1)
     
@@ -490,41 +480,36 @@ class U_net_TriplePlus(nn.Module):
         x4 = self.maxpool3(x3)
         x4 = self.conv4(x4)
 
-        x5 = self.maxpool4(x4)
-        x5 = self.conv5(x5)
-
         ## -------------Decoder-------------
-        x6_1 = self.de1_1(x5)
-        x6_2 = self.de1_2(x4)
-        x6_3 = self.de1_3(x3)
-        x6_4 = self.de1_4(x2)
-        x6_5 = self.de1_5(x1)
-        x6_6 = torch.cat((x6_1,x6_2,x6_3,x6_4,x6_5),1)
-        x6 = self.de1_6(x6_6)
+        x5_1 = self.de1_1(x4)
+        x5_2 = self.de1_2(x3)
+        x5_3 = self.de1_3(x2)
+        x5_4 = self.de1_4(x1)
+        x5_5 = torch.cat([x5_1,x5_2,x5_3,x5_4],1)
+        x5 = self.de1_5(x5_5)
 
-        x7_1 = self.de2_1(x5)
-        x7_2 = self.de2_2(x6)
-        x7_3 = self.de2_3(x3)
-        x7_4 = self.de2_4(x2)
-        x7_5 = self.de2_5(x1)
-        x7_6 = torch.cat((x7_1,x7_2,x7_3,x7_4,x7_5),1)
-        x7 = self.de2_6(x7_6)
+        x6_1 = self.de2_1(x4)
+        x6_2 = self.de2_2(x5)
+        x6_3 = self.de2_3(x2)
+        x6_4 = self.de2_4(x1)
+        x6_5 = torch.cat((x6_1,x6_2,x6_3,x6_4),1)
+        x6 = self.de2_5(x6_5)
 
-        x8_1 = self.de3_1(x5)
-        x8_2 = self.de3_2(x6)
-        x8_3 = self.de3_3(x7)
-        x8_4 = self.de3_4(x2)
-        x8_5 = self.de3_5(x1)
-        x8_6 = torch.cat((x8_1,x8_2,x8_3,x8_4,x8_5),1)
-        x8 = self.de3_6(x8_6)
+        x7_1 = self.de3_1(x4)
+        x7_2 = self.de3_2(x5)
+        x7_3 = self.de3_3(x6)
+        x7_4 = self.de3_4(x1)
+        x7_5 = torch.cat((x7_1,x7_2,x7_3,x7_4),1)
+        x7 = self.de3_5(x7_5)
 
-        x9_1 = self.de4_1(x5)
-        x9_2 = self.de4_2(x6)
-        x9_3 = self.de4_3(x7)
-        x9_4 = self.de4_4(x8)
-        x9_5 = self.de4_5(x1)
-        x9_6 = torch.cat((x9_1,x9_2,x9_3,x9_4,x9_5),1)
-        x9 = self.de4_6(x9_6)
 
-        output = self.out_conv(x9)
+
+        output = self.out_conv(x7)
         return output
+    
+
+if __name__ == "__main__":
+  
+  x = U_net_TriplePlus(1,1)
+  print(sum(p.numel() for p in x.parameters()))
+  print(x(torch.randn(1,1,128,128,16)).shape)
