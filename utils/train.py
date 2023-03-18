@@ -167,12 +167,12 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
             cpu_memory_end = psutil.Process().memory_info().rss
 
             # calculate memory usage
-            max_gpu_memory = max(max_gpu_memory, gpu_memory_end - gpu_memory_start)
-            max_cpu_memory = max(max_cpu_memory, cpu_memory_end - cpu_memory_start)
+            max_gpu_memory = max(max_gpu_memory, round((gpu_memory_end - gpu_memory_start)// (1024*1024),2))
+            max_cpu_memory = max(max_cpu_memory, round((cpu_memory_end - cpu_memory_start)// (1024*1024),2))
             
             print("Time Taken: ",time_taken)
             print("Maximum GPU Memory taken for training: ",max_gpu_memory)
-            print("Maximum CPU Memory taken for training: ",max_gpu_memory)
+            print("Maximum CPU Memory taken for training: ",max_cpu_memory)
             print(
                 f"train completed, best_metric: {best_metric:.4f} "
                 f"at epoch: {best_metric_epoch}")
