@@ -12,11 +12,15 @@ from pathlib import Path
 
 def load_metrices(path):
   metrices_dir = path
-  #if n : metrices_dir = OUT_DIR + 'tries/try' + str(n) + "/"
-  train_loss = np.load(os.path.join(metrices_dir, 'loss_train.npy'))
-  train_metric = np.load(os.path.join(metrices_dir, 'metric_train.npy'))
-  test_loss = np.load(os.path.join(metrices_dir, 'loss_test.npy'))
-  test_metric = np.load(os.path.join(metrices_dir, 'metric_test.npy'))
+  train_loss = train_metric = test_loss = test_metric =np.array([])
+  if os.path.isfile(os.path.join(metrices_dir, 'loss_train.npy')):
+    train_loss = np.load(os.path.join(metrices_dir, 'loss_train.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'metric_train.npy')):
+    train_metric = np.load(os.path.join(metrices_dir, 'metric_train.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'loss_test.npy')):
+    test_loss = np.load(os.path.join(metrices_dir, 'loss_test.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'metric_test.npy')):
+    test_metric = np.load(os.path.join(metrices_dir, 'metric_test.npy'))
   return train_loss, train_metric, test_loss, test_metric
 
 def dice_metric(predicted, target):
