@@ -12,11 +12,15 @@ from pathlib import Path
 
 def load_metrices(path):
   metrices_dir = path
-  #if n : metrices_dir = OUT_DIR + 'tries/try' + str(n) + "/"
-  train_loss = np.load(os.path.join(metrices_dir, 'loss_train.npy'))
-  train_metric = np.load(os.path.join(metrices_dir, 'metric_train.npy'))
-  test_loss = np.load(os.path.join(metrices_dir, 'loss_test.npy'))
-  test_metric = np.load(os.path.join(metrices_dir, 'metric_test.npy'))
+  train_loss = train_metric = test_loss = test_metric =np.array([])
+  if os.path.isfile(os.path.join(metrices_dir, 'loss_train.npy')):
+    train_loss = np.load(os.path.join(metrices_dir, 'loss_train.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'metric_train.npy')):
+    train_metric = np.load(os.path.join(metrices_dir, 'metric_train.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'loss_test.npy')):
+    test_loss = np.load(os.path.join(metrices_dir, 'loss_test.npy'))
+  if os.path.isfile(os.path.join(metrices_dir, 'metric_test.npy')):
+    test_metric = np.load(os.path.join(metrices_dir, 'metric_test.npy'))
   return train_loss, train_metric, test_loss, test_metric
 
 def dice_metric(predicted, target):
@@ -48,7 +52,7 @@ def updateLogs(path, data):
     f.write(data)
     f.close()
 
-def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , device=torch.device("cuda:0"), start_from=1):
+def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , device=torch.device("cuda:0"), start_from=1, load_from=""):
     best_metric = -1
     best_metric_epoch = -1
     save_loss_train = []
@@ -56,7 +60,7 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
     save_metric_train = []
     save_metric_test = []
     if (start_from != 1):
-      save_loss_train, save_metric_train, save_loss_test, save_metric_test= [x.tolist() for x in load_metrices(model_dir)]
+      save_loss_train, save_metric_train, save_loss_test, save_metric_test= [x.tolist() for x in load_metrices(load_from)]
       best_metric = max(save_metric_train)
       best_metric_epoch = -2
     train_loader, test_loader = data_in
@@ -119,6 +123,9 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
 
         save_metric_train.append(epoch_metric_train)
         np.save(os.path.join(model_dir, 'metric_train.npy'), save_metric_train)
+
+        torch.save(model.state_dict(), os.path.join(
+            model_dir, "current_metric_model.pth"))
 
         updateLogs(os.path.join(model_dir, "logs.txt"), f"{'-'*20}{epoch+1} \nEpoch_loss: {train_epoch_loss:.4f}\nEpoch_metric: {epoch_metric_train:.4f}\n")
 
