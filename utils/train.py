@@ -62,7 +62,8 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
     save_metric_test = []
     if (start_from != 1):
       save_loss_train, save_metric_train, save_loss_test, save_metric_test= [x.tolist() for x in load_metrices(load_from)]
-      best_metric = max(save_metric_train)
+      if(len(save_metric_test)):
+        best_metric = max(save_metric_test)
       best_metric_epoch = -2
     train_loader, test_loader = data_in
 
