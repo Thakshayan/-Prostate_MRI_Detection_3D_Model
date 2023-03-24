@@ -9,6 +9,7 @@ import datetime
 import pytz
 from torchmetrics import JaccardIndex
 from pathlib import Path
+import math
 
 def load_metrices(path):
   metrices_dir = path
@@ -42,7 +43,7 @@ def update_history(data,model_dir):
   history_file_path = model_dir + "history.csv"
   if not os.path.exists(history_file_path):
     with open(history_file_path,'a') as fd:
-        fd.write(",".join(["Start", "End", "Best Matrix", "Best M. At", "Jaccard Index" "Time Taken", "CUDA Memory Used", "CPU Memory","Time"]))
+        fd.write(",".join(["Start", "End", "Best Matrix", "Best M. At", "Jaccard Index", "Time Taken", "CUDA Memory Used", "CPU Memory","Time"]))
   with open(history_file_path,'a') as fd:
       str_data=[str(x) for x in (data + [get_time()])]
       fd.write("\n" + ",".join(str_data))
@@ -65,7 +66,7 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
       best_metric_epoch = -2
     train_loader, test_loader = data_in
 
-    jaccard = JaccardIndex(task='binary').to(device)
+    jaccard = JaccardIndex(task='binary')
     if torch.cuda.is_available():
         jaccard.to(device)
 
@@ -138,6 +139,7 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
                 epoch_metric_test = 0
                 test_step = 0
                 epoch_jaccard_val = 0
+                tast_jaccard_images = 0
 
                 for test_data in test_loader:
 
@@ -157,7 +159,9 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
                     epoch_metric_test += test_metric
 
                     jaccard_val = jaccard(test_outputs, test_label).item()
-                    epoch_jaccard_val += jaccard_val
+                    if(not math.isnan(jaccard_val)):
+                        epoch_jaccard_val += jaccard_val
+                        tast_jaccard_images += 1
 
                 test_epoch_loss /= test_step
                 print(f'test_loss_epoch: {test_epoch_loss:.4f}')
@@ -169,7 +173,7 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
                 save_metric_test.append(epoch_metric_test)
                 np.save(os.path.join(model_dir, 'metric_test.npy'), save_metric_test)
 
-                epoch_jaccard_val /= test_step
+                epoch_jaccard_val = epoch_jaccard_val/tast_jaccard_images if tast_jaccard_images else 0
 
                 if epoch_metric_test > best_metric:
                     best_metric = epoch_metric_test
