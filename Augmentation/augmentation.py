@@ -31,8 +31,8 @@ def rotate(image, label ):
     angle =  random.uniform(-15, 15)
     imgvol = np.array( image.dataobj )
     lblvol = np.array( label.dataobj )
-    img = rotate(imgvol, angle, reshape=False)
-    lbl = rotate(lblvol, angle, reshape=False)
+    img = rotate(imgvol, angle)
+    lbl = rotate(lblvol, angle)
     image = nib.Nifti1Image ( img, image.affine )
     label = nib.Nifti1Image ( lbl, label.affine )
     return image, label

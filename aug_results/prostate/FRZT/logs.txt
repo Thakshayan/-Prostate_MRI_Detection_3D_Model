@@ -1,0 +1,96 @@
+--------------------1 
+Epoch_loss: 0.7452
+Epoch_metric: 0.2548
+--------------------2 
+Epoch_loss: 0.7093
+Epoch_metric: 0.2907
+--------------------3 
+Epoch_loss: 0.6739
+Epoch_metric: 0.3261
+--------------------4 
+Epoch_loss: 0.6515
+Epoch_metric: 0.3485
+--------------------5 
+Epoch_loss: 0.6365
+Epoch_metric: 0.3635
+------------------------------
+current epoch: 5 
+test_dice_epoch: 0.1971
+test_loss_epoch: 0.8029
+mean jaccard index: 0.0000
+best mean dice: 0.1971 at epoch: 5
+time_taken: 192.9114
+cuda_memory: 0
+cpu_memory: 301.0000 --------------------6 
+Epoch_loss: 0.6257
+Epoch_metric: 0.3743
+--------------------7 
+Epoch_loss: 0.6175
+Epoch_metric: 0.3825
+--------------------8 
+Epoch_loss: 0.6112
+Epoch_metric: 0.3888
+--------------------9 
+Epoch_loss: 0.6113
+Epoch_metric: 0.3887
+--------------------10 
+Epoch_loss: 0.6096
+Epoch_metric: 0.3904
+------------------------------
+current epoch: 10 
+test_dice_epoch: 0.2039
+test_loss_epoch: 0.7961
+mean jaccard index: 0.0000
+best mean dice: 0.2039 at epoch: 10
+time_taken: 375.7070
+cuda_memory: 0
+cpu_memory: 301.0000 --------------------11 
+Epoch_loss: 0.6078
+Epoch_metric: 0.3922
+--------------------12 
+Epoch_loss: 0.6027
+Epoch_metric: 0.3973
+--------------------13 
+Epoch_loss: 0.6021
+Epoch_metric: 0.3979
+--------------------14 
+Epoch_loss: 0.5992
+Epoch_metric: 0.4008
+--------------------15 
+Epoch_loss: 0.5982
+Epoch_metric: 0.4018
+------------------------------
+current epoch: 15 
+test_dice_epoch: 0.2124
+test_loss_epoch: 0.7876
+mean jaccard index: 0.0000
+best mean dice: 0.2124 at epoch: 15
+time_taken: 570.1357
+cuda_memory: 0
+cpu_memory: 301.0000 --------------------16 
+Epoch_loss: 0.5983
+Epoch_metric: 0.4017
+--------------------17 
+Epoch_loss: 0.5983
+Epoch_metric: 0.4017
+--------------------18 
+Epoch_loss: 0.5973
+Epoch_metric: 0.4027
+--------------------19 
+Epoch_loss: 0.5962
+Epoch_metric: 0.4038
+--------------------20 
+Epoch_loss: 0.5944
+Epoch_metric: 0.4056
+------------------------------
+current epoch: 20 
+test_dice_epoch: 0.2114
+test_loss_epoch: 0.7886
+mean jaccard index: 0.0000
+best mean dice: 0.2124 at epoch: 15
+time_taken: 759.3964
+cuda_memory: 0
+cpu_memory: 301.0000 train completed, best_metric: 0.2124at epoch: 15
+time_taken: 759.3964
+cuda_memory: 0
+cpu_memory: 301.0000 

@@ -161,7 +161,11 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
                     test_metric = dice_metric(test_outputs, test_label)
                     epoch_metric_test += test_metric
 
-                    jaccard_val = jaccard(test_outputs, test_label).item()
+                    if 'jaccard' not in locals() or not callable(jaccard):
+                      jaccard_val = jaccard(test_outputs, test_label).item()
+                    else:
+                       jaccard_val = 0
+
                     if(not math.isnan(jaccard_val)):
                         epoch_jaccard_val += jaccard_val
                         tast_jaccard_images += 1

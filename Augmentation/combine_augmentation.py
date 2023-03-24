@@ -161,7 +161,7 @@ def random_flip_rotate_noise(image, label):
     lbl = rotate(lblvol, angle, reshape=False)
 
     # Randomly flip the image and label along one or more axes
-    flip_axes = tuple(np.random.choice([-1, 1], size=image.ndim, replace=True))
+    flip_axes = [i for i in range(2) if i != 2 and np.random.choice([0, 1]) == 1]
     img = np.flip(img, axis=flip_axes)
     lbl = np.flip(lbl, axis=flip_axes)
 
