@@ -65,8 +65,9 @@ def train(model, data_in, loss, optim, max_epochs, model_dir, test_interval=1 , 
       best_metric_epoch = -2
     train_loader, test_loader = data_in
 
-    jaccard = JaccardIndex(task='binary').to(device)
+    
     if torch.cuda.is_available():
+        jaccard = JaccardIndex(task='binary').to(device)
         jaccard.to(device)
 
     start = time.time()
