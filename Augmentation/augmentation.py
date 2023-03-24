@@ -1,16 +1,12 @@
-import torch
 import nibabel as nib
-
+import random
 import elasticdeform 
-from skimage.util import random_noise
-
-import torchvision.transforms.functional as TF
-import nibabel as nib
-#import torchio as tio
-
 import numpy as np
-from scipy import ndimage
-from scipy.ndimage import shift
+import nibabel as nib
+
+from scipy.ndimage import affine_transform, rotate, zoom
+from skimage.exposure import adjust_gamma, rescale_intensity
+from skimage.util import random_noise
 
 def verticalFlip(image, label):
     imgvol = np.array( image.dataobj )
@@ -31,12 +27,12 @@ def horizontalFlip(image, label):
     return image, label
 
 
-def rotate(image, label, angle = 30 ):
-    #return np.rot90(image), np.rot90(label)
+def rotate(image, label ):
+    angle =  random.uniform(-15, 15)
     imgvol = np.array( image.dataobj )
     lblvol = np.array( label.dataobj )
-    img = ndimage.rotate(imgvol, angle, reshape=False)
-    lbl = ndimage.rotate(lblvol, angle, reshape=False)
+    img = rotate(imgvol, angle, reshape=False)
+    lbl = rotate(lblvol, angle, reshape=False)
     image = nib.Nifti1Image ( img, image.affine )
     label = nib.Nifti1Image ( lbl, label.affine )
     return image, label
@@ -45,15 +41,14 @@ def rotate(image, label, angle = 30 ):
 def elasticDeformation(image, label):
 
     # Set elastic deformation parameters
-    sigma = 20  # Elastic deformation intensity
+    sigma = 2  # Elastic deformation intensity 2,3 for prostate 2-5 for mri 8,10 for experiments
     order = 3   # Interpolation order
-    mode = 'mirror'  # Boundary condition for interpolation
-    cval = -5   # Value to use for boundaries when mode='constant'
-
+    mode='constant'  # Boundary condition for interpolation
+    
     imgvol = np.array( image.dataobj )
     lblvol = np.array( label.dataobj )
-    img = elasticdeform.deform_random_grid(imgvol, sigma=sigma,  order=order, mode=mode, cval=cval)
-    lbl = elasticdeform.deform_random_grid(lblvol, sigma=sigma,  order=order, mode=mode, cval=cval)
+    img = elasticdeform.deform_random_grid(imgvol, sigma=sigma,  order=3, mode=mode)
+    lbl = elasticdeform.deform_random_grid(lblvol, sigma=sigma,  order=0, mode=mode)
     image = nib.Nifti1Image ( img, image.affine )
     label = nib.Nifti1Image ( lbl, label.affine )
     return image, label
@@ -62,67 +57,81 @@ def elasticDeformation(image, label):
 def noise(image, label):
     # modes = ['s&p','gaussian','speckle']
     imgvol = np.array( image.dataobj )
-    noisy_image = random_noise(imgvol, mode='gaussian', var=0.01, clip=False)
-    noisy_image = random_noise(noisy_image, mode='s&p', salt_vs_pepper=0.5, clip=False)
+    noisy_image = random_noise(imgvol, mode='gaussian', var=0.000001, clip=False)
+    noisy_image = random_noise(noisy_image, mode='s&p', salt_vs_pepper=0.5, amount=0.0000005, clip=False)
     image = nib.Nifti1Image ( noisy_image, image.affine )
     return image, label
 
 
 
-# def addGuassianNoise(image, label, saltPepper = True):
-#     # Define the standard deviation of the Gaussian noise
-#     sigma = 0.1
-
-#     # Generate Gaussian noise with the same shape as the MRI images
-#     noise_m = np.random.normal(loc=0, scale=sigma, size= image.shape)
-#     noise_l = np.random.normal(loc=0, scale=sigma, size= image.shape)
-
-#     # Add the noise to the MRI images
-#     noisy_images = image + noise_m
-#     noisy_labels = label + noise_l
-
-#     return noisy_images, noisy_labels
 
 
+def changeContrast(image, label):
+    imgvol = np.array(image.dataobj)
+    lblvol = np.array(label.dataobj)
+
+    # Brightness
+    gamma = random.uniform(0.8, 1.2)
+    min_value = np.min(imgvol)
+    img = imgvol - min_value
+    img = adjust_gamma(img, gamma)
+
+    # Contrast
+    low = np.percentile(img, 10)
+    high = np.percentile(img, 98)
+    img = rescale_intensity(img, in_range=(low, high))
+
+    lbl = lblvol
+
+    image = nib.Nifti1Image(img, image.affine)
+    label = nib.Nifti1Image(lbl, label.affine)
+    return image, label
 
 
-# def elasticFormation(image, label):
-#     # Define elastic transformation
-#     elastic = tio.transforms.ElasticDeformation(num_control_points=7, locked_borders=2, image_interpolation='bspline')
+def translate(image, label):
 
-#     # Apply elastic transformation
-#     return elastic(image.unsqueeze(0)).squeeze(0), elastic(label.unsqueeze(0)).squeeze(0)
+    translate = (random.uniform(-10, 10), random.uniform(-10, 10))
+    matrix = np.array([[1, 0, 0, translate[0]], [0, 1, 0, translate[1]], [0, 0, 1, 0], [0, 0, 0, 1]])
+
+    imgvol = np.array(image.dataobj)
+    lblvol = np.array(label.dataobj)
+
+    # Translate
+    img = affine_transform(imgvol, matrix, order=1)
+    lbl = affine_transform(lblvol, matrix, order=0)
+
+    image = nib.Nifti1Image(img, image.affine)
+    label = nib.Nifti1Image(lbl, label.affine)
+    return image, label
 
 
+def sheartranslate(image, label):
 
-# def changeContrast(image, label, contrast_factor=1.5):
-#     return TF.adjust_contrast(image, contrast_factor), TF.adjust_contrast( label, contrast_factor)
-
-
-# def translation(image, label):
-
-#     # shift 10 pixels to the right and 20 pixels down
-#     shift_amount = (10, 20, 0)  # (shift along height axis, shift along width axis, no shift along channel axis)
-
-#     # perform translation
-#     translated_image = shift(image, shift_amount, cval=0)
-#     translated_label = shift(label, shift_amount, cval=0)
+    translate = (random.uniform(-10,10), random.uniform(-10,10))
+    shear = random.uniform(-0.2,0.2)
+    matrix = np.array([[1, shear, 0, translate[0]], [0, 1, 0, translate[1]], [0, 0, 1, 0], [0, 0, 0, 1]])
     
-#     return translated_image, translated_label
+    imgvol = np.array(image.dataobj)
+    lblvol = np.array(label.dataobj)
 
+    # Translate
+    img = affine_transform(imgvol, matrix, order=1)
+    lbl = affine_transform(lblvol, matrix, order=0)
 
-# def resize(image, label, scale_factor=0.5):
-#     scaled_image = TF.resize(image, [int(scale_factor*224), int(scale_factor*224)])
-#     scaled_label = TF.resize(label, [int(scale_factor*224), int(scale_factor*224)])
+    image = nib.Nifti1Image(img, image.affine)
+    label = nib.Nifti1Image(lbl, label.affine)
+    return image, label
 
-#     return scaled_image,scaled_label
+def randomFlip(image, label):
+    flip_axes = [ i for i in range(2) if i!=2 and np.random.choice([0, 1]) == 1]
 
+    imgvol = np.array(image.dataobj)
+    lblvol = np.array(label.dataobj)
 
-# def crop(image, label, crop_size):
-#     crop_size = 128
+    # Randomly flip the image and label along one or more axes, except for the z-axis
+    img = np.flip(imgvol, axis=flip_axes)
+    lbl = np.flip(lblvol, axis=flip_axes)
 
-#     # Apply random crop transformation
-#     cropped_image = TF.random_crop(image, [crop_size, crop_size])
-#     cropped_label = TF.random_crop(label, [crop_size, crop_size])
-
-#     return cropped_image, cropped_label
+    image = nib.Nifti1Image(img, image.affine)
+    label = nib.Nifti1Image(lbl, label.affine)
+    return image, label
