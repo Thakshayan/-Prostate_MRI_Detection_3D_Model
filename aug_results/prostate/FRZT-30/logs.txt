@@ -1,0 +1,139 @@
+--------------------1 
+Epoch_loss: 0.6176
+Epoch_metric: 0.3824
+--------------------2 
+Epoch_loss: 0.5938
+Epoch_metric: 0.4062
+--------------------3 
+Epoch_loss: 0.5890
+Epoch_metric: 0.4110
+--------------------4 
+Epoch_loss: 0.5845
+Epoch_metric: 0.4155
+--------------------5 
+Epoch_loss: 0.5804
+Epoch_metric: 0.4196
+------------------------------
+current epoch: 5 
+test_dice_epoch: 0.1829
+test_loss_epoch: 0.8171
+mean jaccard index: 0.0000
+best mean dice: 0.1829 at epoch: 5
+time_taken: 2841.4167
+cuda_memory: 0
+cpu_memory: 0.0000 --------------------6 
+Epoch_loss: 0.5752
+Epoch_metric: 0.4248
+--------------------7 
+Epoch_loss: 0.5693
+Epoch_metric: 0.4307
+--------------------8 
+Epoch_loss: 0.5646
+Epoch_metric: 0.4354
+--------------------9 
+Epoch_loss: 0.5599
+Epoch_metric: 0.4401
+--------------------10 
+Epoch_loss: 0.5551
+Epoch_metric: 0.4449
+------------------------------
+current epoch: 10 
+test_dice_epoch: 0.1977
+test_loss_epoch: 0.8023
+mean jaccard index: 0.0000
+best mean dice: 0.1977 at epoch: 10
+time_taken: 5854.5534
+cuda_memory: 0
+cpu_memory: 0.0000 --------------------11 
+Epoch_loss: 0.5507
+Epoch_metric: 0.4493
+--------------------12 
+Epoch_loss: 0.5449
+Epoch_metric: 0.4551
+--------------------13 
+Epoch_loss: 0.5395
+Epoch_metric: 0.4605
+--------------------14 
+Epoch_loss: 0.5346
+Epoch_metric: 0.4654
+--------------------15 
+Epoch_loss: 0.5297
+Epoch_metric: 0.4703
+------------------------------
+current epoch: 15 
+test_dice_epoch: 0.2194
+test_loss_epoch: 0.7806
+mean jaccard index: 0.0000
+best mean dice: 0.2194 at epoch: 15
+time_taken: 9532.8982
+cuda_memory: 0
+cpu_memory: 0.0000 --------------------16 
+Epoch_loss: 0.5245
+Epoch_metric: 0.4755
+--------------------17 
+Epoch_loss: 0.5182
+Epoch_metric: 0.4818
+--------------------18 
+Epoch_loss: 0.5130
+Epoch_metric: 0.4870
+--------------------19 
+Epoch_loss: 0.5073
+Epoch_metric: 0.4927
+--------------------20 
+Epoch_loss: 0.5016
+Epoch_metric: 0.4984
+------------------------------
+current epoch: 20 
+test_dice_epoch: 0.2416
+test_loss_epoch: 0.7584
+mean jaccard index: 0.0000
+best mean dice: 0.2416 at epoch: 20
+time_taken: 12344.5661
+cuda_memory: 0
+cpu_memory: 0.0000 --------------------21 
+Epoch_loss: 0.4947
+Epoch_metric: 0.5053
+--------------------22 
+Epoch_loss: 0.4881
+Epoch_metric: 0.5119
+--------------------23 
+Epoch_loss: 0.4807
+Epoch_metric: 0.5193
+--------------------24 
+Epoch_loss: 0.4742
+Epoch_metric: 0.5258
+--------------------25 
+Epoch_loss: 0.4678
+Epoch_metric: 0.5322
+------------------------------
+current epoch: 25 
+test_dice_epoch: 0.2860
+test_loss_epoch: 0.7140
+mean jaccard index: 0.0000
+best mean dice: 0.2860 at epoch: 25
+time_taken: 15228.2462
+cuda_memory: 0
+cpu_memory: 0.0000 --------------------26 
+Epoch_loss: 0.4619
+Epoch_metric: 0.5381
+--------------------27 
+Epoch_loss: 0.4558
+Epoch_metric: 0.5442
+--------------------28 
+Epoch_loss: 0.4498
+Epoch_metric: 0.5502
+--------------------29 
+Epoch_loss: 0.4439
+Epoch_metric: 0.5561
+--------------------30 
+Epoch_loss: 0.4371
+Epoch_metric: 0.5629
+------------------------------
+current epoch: 30 
+test_dice_epoch: 0.3129
+test_loss_epoch: 0.6871
+mean jaccard index: 0.0000
+best mean dice: 0.3129 at epoch: 30
+time_taken: 18796.0383
+cuda_memory: 0
+cpu_memory: 0.0000 

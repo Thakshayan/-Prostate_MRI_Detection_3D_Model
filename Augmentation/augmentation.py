@@ -27,7 +27,7 @@ def horizontalFlip(image, label):
     return image, label
 
 
-def rotate(image, label ):
+def rotated(image, label ):
     angle =  random.uniform(-15, 15)
     imgvol = np.array( image.dataobj )
     lblvol = np.array( label.dataobj )
