@@ -4,11 +4,13 @@ import torch.nn as nn
 
 def double_conv(in_channels, out_channels):
     return nn.Sequential(
-        nn.Conv3d(in_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True),
-        nn.Conv3d(out_channels, out_channels, 3, padding=1),
-        nn.ReLU(inplace=True)
-    )   
+            nn.Conv3d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm3d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv3d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm3d(out_channels),
+            nn.ReLU(inplace=True)
+        )  
 
 class MNet(nn.Module):
     def __init__(self, num_classes=1):
@@ -49,7 +51,7 @@ class MNet(nn.Module):
 
         mid = self.e2_e4(conv2)
         mid = self.maxpool(mid)
-        print(mid.shape, x.shape)
+     
         x = torch.cat([mid,x], dim=1)
         x = self.conv_mid1(x)
 
