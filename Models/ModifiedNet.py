@@ -7,11 +7,11 @@ def double_conv(in_channels, out_channels):
             nn.Conv3d(in_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Dropout3d(0.05),
+            nn.Dropout3d(0.5),
             nn.Conv3d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Dropout3d(0.05)
+            nn.Dropout3d(0.5)
         )  
 
 class MNet(nn.Module):
