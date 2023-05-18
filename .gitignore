@@ -2,3 +2,4 @@
 /PROSTATEx_masks
 /packages
 *.pth
+/cross
